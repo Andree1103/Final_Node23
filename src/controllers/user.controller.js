@@ -1,6 +1,7 @@
 const AuthServices = require("../services/auth.service");
 const UserService = require("../services/user.service");
 const { cars } = require("../models");
+const transporter = require("../utils/mailer");
 
 const createUser = async (req, res, next) => {
   try {
@@ -9,11 +10,21 @@ const createUser = async (req, res, next) => {
     if (!user) {
       next(error);
     }
+    await transporter.sendMail({
+      from: "andreechiquis11@gmail.com",
+      to: user.email,
+      subject: "Verifica tu correo electronico",
+      html: `
+                <p>Hola ${user.username} Bienvenido al foro</p>
+                <p>Es necesario que verifiques tu correo</p>
+                `,
+    });
     await cars.create({
       userId: user.id,
     });
     res.status(201).json(user);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

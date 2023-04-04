@@ -1,4 +1,5 @@
-const { productsInCarts, cars, products } = require("../models");
+const { productsInCarts, cars, products, users } = require("../models");
+const CardsService = require("../services/cars.service");
 
 const createProductinCar = async (req, res, next) => {
   try {
@@ -23,6 +24,18 @@ const createProductinCar = async (req, res, next) => {
   }
 };
 
+const getProductWithUser = async (req, res, next) => {
+  try {
+    const { cardId } = req.params;
+    const produtUser = await CardsService.productswithUser(cardId);
+    res.json(produtUser);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 module.exports = {
   createProductinCar,
+  getProductWithUser,
 };
