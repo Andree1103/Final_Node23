@@ -1,0 +1,520 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Proyecto Final",
+    "description": "Una API para que puedas contruir una tienda virtual en la cual puedas hacer compras, agregar productos y un carrito",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/users": {
+      "post": {
+        "tags": ["users"],
+        "description": "con este end ponit podras crear un nuevo usuario para el e-comerce",
+        "summary": "registrar un usuario ",
+        "requestBody": {
+          "description": "los campos para crear un nuevo usuarion son : username , email y password",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/login" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created"
+          },
+          "409": {
+            "description": "conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "validation error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Database conection error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{id}": {
+      "put": {
+        "tags": ["users"],
+        "summary": "Actualiza el username y el avatar",
+        "description": "para actualizarlo necesitas mandar en el body el username y el avatar y en el path param el id del user que se va a actualizar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": "true",
+            "description": "el id del user que se va a actualizar"
+          }
+        ],
+        "requestBody": {
+          "description": "probando actualizacion de user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/v1/products": {
+      "post": {
+        "tags": ["products"],
+        "description": "con este end ponit podras agregar un nuevo producto a tu inventario",
+        "summary": "registrar un nuevo producto ",
+        "requestBody": {
+          "description": "los campos para agregar un nuevo producto son : name , description , price , userId, productImage",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/product_register" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created"
+          },
+          "409": {
+            "description": "conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "validation error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Database conection error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "obtener productos",
+        "tags": ["products"],
+        "responses": {
+          "200": {
+            "description": " ok ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getProduct"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/products/{id}": {
+      "put": {
+        "tags": ["products"],
+        "summary": "Actualiza la descripcion actual de un producto",
+        "description": "para actualizarlo necesitas mandar en el body description y en el path param el id del producto que se va a actualizar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": "true",
+            "description": "el id del producto que se va a actualizar"
+          }
+        ],
+        "requestBody": {
+          "description": "probando actualizacion de user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateProduct"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/v1/sellCar/Order": {
+      "post": {
+        "tags": ["Products In Cart"],
+        "description": "con este end ponit podras vaciar el carrito y crear una orden",
+        "summary": "registrar una nueva orden ",
+        "requestBody": {
+          "description": "los campos para crear una nueva orden son : userId y totalPrice",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/createOrder" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created"
+          },
+          "409": {
+            "description": "conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "validation error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Database conection error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{id}": {
+      "get": {
+        "tags": ["order"],
+        "summary": "atrae todas las ordenes",
+        "description": "obtiene todas las ordenes del usuario",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": "true",
+            "description": "el id del usuario"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": " ok ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getOrderId"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/productsInCart": {
+      "post": {
+        "tags": ["Products In Cart"],
+        "description": "con este end point podras agregar productos al carrito",
+        "summary": "agregar productos al carrito ",
+        "requestBody": {
+          "description": "los campos para agregar productos al carrito son carId, productId, quantity y price ",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/addProducts" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created"
+          },
+          "409": {
+            "description": "conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "validation error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Database conection error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{cardId}/products": {
+      "get": {
+        "tags": ["Products In Cart"],
+        "summary": "atrae los productos del carrito de un usuario",
+        "description": "obtiene el carrito de un usuario ",
+        "parameters": [
+          {
+            "name": "cardId",
+            "in": "path",
+            "required": "true",
+            "description": "el id del usuario "
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": " ok ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getProductsInCartId"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "getProduct": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "name": {
+              "type": "string",
+              "example": "shampoo"
+            },
+            "description": {
+              "type": "string",
+              "example": "los mejores shampoo para el cabello"
+            },
+            "price": {
+              "type": "integer",
+              "example": 10
+            },
+            "availableQty": {
+              "type": "integer",
+              "example": 6
+            },
+            "productImage": {
+              "type": "string",
+              "example": "https://www.atriainnovation.com/wp-content/uploads/2022/06/Portada_3.jpg"
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "username": {
+                  "type": "string",
+                  "example": "jose luis"
+                }
+              }
+            }
+          }
+        }
+      },
+      "getProductsInCartId": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "productId": {
+              "type": "array",
+              "example": 3
+            },
+            "quantity": {
+              "type": "integer",
+              "example": 9
+            },
+            "product": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Antisarro"
+                },
+                "price": {
+                  "type": "integer",
+                  "example": 35
+                }
+              }
+            },
+            "car": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "example": "jose luis"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "getOrderId": {
+        "type": "object",
+
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "totalPrice": {
+            "type": "integer",
+            "example": 200
+          },
+          "userId": {
+            "type": "integer",
+            "example": 1
+          },
+          "status": {
+            "type": "boolean",
+            "example": "false"
+          }
+        }
+      },
+      "addProducts": {
+        "type": "object",
+        "properties": {
+          "carId": {
+            "type": "integer",
+            "example": 1
+          },
+          "productId": {
+            "type": "integer",
+            "example": 3
+          },
+          "quantity": {
+            "type": "integer",
+            "example": 9
+          },
+          "price": {
+            "type": "integer",
+            "example": 156
+          }
+        }
+      },
+      "product_register": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "jabon liquido"
+          },
+          "description": {
+            "type": "string",
+            "example": "te deja las manos muy suaves y limpias con aroma a canela"
+          },
+          "price": {
+            "type": "integer",
+            "example": 14.0
+          },
+          "userId": {
+            "type": "integer",
+            "example": 2
+          },
+          "productImage": {
+            "type": "string",
+            "example": "https://recamierco.vteximg.com.br/arquivos/ids/155602-1000-1000/007862-Bact-Jabon-Liquido-2-en-1-Bambu-300ml.jpg?v=637281978787900000"
+          }
+        }
+      },
+      "createOrder": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "example": 1
+          },
+          "totalPrice": {
+            "type": "integer",
+            "example": 300
+          }
+        }
+      },
+      "login": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "jace1103"
+          },
+          "email": {
+            "type": "string",
+            "example": "andreee123@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "1234567"
+          }
+        }
+      },
+      "updateUser": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "jace1103"
+          },
+          "avatar": {
+            "type": "string",
+            "example": "url_imagen"
+          }
+        }
+      },
+      "updateProduct": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "example": "nuevo jabon para perros"
+          }
+        }
+      }
+    }
+  }
+}
